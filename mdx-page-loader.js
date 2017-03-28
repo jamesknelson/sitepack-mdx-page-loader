@@ -2,7 +2,6 @@ const url = require('url')
 const path = require('path')
 const loaderUtils = require('loader-utils')
 const frontMatter = require('front-matter')
-const mdAnchor = require('markdown-it-anchor')
 const Prism = require('prismjs')
 const MDXIt = require('mdx-it')
 const { loadPageWithContent } = require('sitepack/lib/loaderUtils')
@@ -110,7 +109,6 @@ module.exports = function markdownLoader(content) {
       .enable(['link'])
       .use(mdImageReplacer)
       .use(mdLinkReplacer(loaderOptions.sitepack.packageRoot, this.resourcePath))
-      .use(mdAnchor);
 
   if (loaderOptions.extractTitle) {
     md = md.use(mdTitleExtractor)
