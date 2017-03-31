@@ -3,7 +3,7 @@ const path = require('path')
 const loaderUtils = require('loader-utils')
 const frontMatter = require('front-matter')
 const Prism = require('prismjs')
-const MDXIt = require('mdx-it')
+const MDXC = require('mdxc')
 const { loadPageWithContent } = require('sitepack/lib/loaderUtils')
 
 
@@ -100,22 +100,24 @@ function mdLinkReplacer(sitepackRoot, resourcePath) {
 module.exports = function markdownLoader(content) {
   const loaderOptions = loaderUtils.getOptions(this);
 
+  loaderOptions.commonJS = true
+
   if (loaderOptions.linkify === undefined) loaderOptions.linkify = true;
   if (loaderOptions.typographer === undefined) loaderOptions.typographer = true;
   if (loaderOptions.highlight === undefined) loaderOptions.highlight = highlight;
 
-  let md =
-    new MDXIt(loaderOptions)
+  let mdxc =
+    new MDXC(loaderOptions)
       .enable(['link'])
       .use(mdImageReplacer)
       .use(mdLinkReplacer(loaderOptions.sitepack.packageRoot, this.resourcePath))
 
   if (loaderOptions.extractTitle) {
-    md = md.use(mdTitleExtractor)
+    mdxc = mdxc.use(mdTitleExtractor)
   }
 
   const data = frontMatter(content);
-  const body = md.render(data.body, env);
+  const body = mdxc.render(data.body, env);
 
   // Pass metadata to Sitepack by setting it on the loader's `value`
   const options = data.attributes
