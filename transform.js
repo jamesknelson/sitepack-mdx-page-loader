@@ -40,6 +40,7 @@ module.exports = function convertMDXLinkPaths(pattern) {
 
         return component({
           factories: {
+            ...factories,
             a: function (props, children) {
               var href = getSiteHref(page, props.href)
               return a(Object.assign({}, props, { href: href }), children)
