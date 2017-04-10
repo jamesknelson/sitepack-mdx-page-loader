@@ -39,13 +39,16 @@ module.exports = function convertMDXLinkPaths(pattern) {
         var a = factories.a || React.createFactory('a')
 
         return component({
-          factories: {
-            ...factories,
-            a: function (props, children) {
-              var href = getSiteHref(page, props.href)
-              return a(Object.assign({}, props, { href: href }), children)
+          factories: Object.assign(
+            {},
+            factories,
+            {
+              a: function (props, children) {
+                var href = getSiteHref(page, props.href)
+                return a(Object.assign({}, props, { href: href }), children)
+              },
             }
-          }
+          )
         })
       }
     }
