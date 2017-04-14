@@ -4,7 +4,7 @@ const loaderUtils = require('loader-utils')
 const frontMatter = require('front-matter')
 const Prism = require('prismjs')
 const MDXC = require('mdxc')
-const { loadPageWithContent } = require('sitepack/lib/loaderUtils')
+const { loadPageWithContent, getSitepackOptions } = require('sitepack/lib/loaderUtils')
 
 
 const env = {};
@@ -98,7 +98,7 @@ function mdLinkReplacer(sitepackRoot, resourcePath) {
 
 
 module.exports = function markdownLoader(content) {
-  const loaderOptions = loaderUtils.getOptions(this);
+  const loaderOptions = getSitepackOptions(this);
 
   loaderOptions.commonJS = true
 
@@ -110,7 +110,7 @@ module.exports = function markdownLoader(content) {
     new MDXC(loaderOptions)
       .enable(['link'])
       .use(mdImageReplacer)
-      .use(mdLinkReplacer(loaderOptions.sitepack.packageRoot, this.resourcePath))
+      .use(mdLinkReplacer(this.sitepack.packageRoot, this.resourcePath))
 
   if (loaderOptions.extractTitle) {
     mdxc = mdxc.use(mdTitleExtractor)
@@ -125,5 +125,5 @@ module.exports = function markdownLoader(content) {
     options.title = env.title 
   }
 
-  return loadPageWithContent(this, options, body)
+  return loadPageWithContent(this, loaderOptions, options, body)
 }
