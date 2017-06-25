@@ -7,7 +7,7 @@ var createContentGetter = Sitepack.createContentGetter
 
 module.exports = function convertMDXLinkPaths(pattern) {
   if (!(pattern instanceof RegExp)) {
-    throw new Error(`Expected argument to convertMDXLinkPaths to be a RegExp. Instead received "${pattern}".`)
+    throw new Error('Expected argument to convertMDXLinkPaths to be a RegExp. Instead received "'+pattern+'}".')
   }
 
   return function (site) {
@@ -23,7 +23,7 @@ module.exports = function convertMDXLinkPaths(pattern) {
           return newHref
         }
         else {
-          console.warn(`Link "${id}" from markdown file "${page.id}" was a 404!`)
+          console.warn('Link "'+id+'" from markdown file "'+page.id+'" was a 404!')
           return '#'
         }
       }
@@ -38,7 +38,7 @@ module.exports = function convertMDXLinkPaths(pattern) {
 
         var a = factories.a || React.createFactory('a')
 
-        return component({
+        return component(Object.assign({}, props, {
           factories: Object.assign(
             {},
             factories,
@@ -49,7 +49,7 @@ module.exports = function convertMDXLinkPaths(pattern) {
               },
             }
           )
-        })
+        }))
       }
     }
 
@@ -61,7 +61,7 @@ module.exports = function convertMDXLinkPaths(pattern) {
       var originalContent = page.content
       var overrideContent =
         isContentGetter(originalContent)
-          ? createContentGetter(function() { return originalContent().then((content) => convertLinks(page, content)) })
+          ? createContentGetter(function() { return originalContent().then(function (content) { return convertLinks(page, content) }) })
           : convertLinks(page, originalContent)
       
       return page.override({ content: overrideContent })
